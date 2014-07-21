@@ -1,12 +1,5 @@
 package main.java.geometrydrawing;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import uk.ac.ed.ph.jqtiplus.ExtensionNamespaceInfo;
 import uk.ac.ed.ph.jqtiplus.JqtiExtensionPackage;
 import uk.ac.ed.ph.jqtiplus.JqtiLifecycleEventType;
@@ -16,12 +9,19 @@ import uk.ac.ed.ph.jqtiplus.node.expression.ExpressionParent;
 import uk.ac.ed.ph.jqtiplus.node.expression.operator.CustomOperator;
 import uk.ac.ed.ph.jqtiplus.node.item.interaction.CustomInteraction;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class GeometryDrawingExtensionPackage implements JqtiExtensionPackage<GeometryDrawingExtensionPackage> {
 
     public static final String DISPLAY_NAME = "GeometryDrawing QTI Extension";
     private final Map<String, ExtensionNamespaceInfo> namespaceInfoMap;
     private final Set<String> customOperatorClasses;
-	private Set<String> customInteractionClasses;
+	private final Set<String> customInteractionClasses;
 
     public GeometryDrawingExtensionPackage() {
         final ExtensionNamespaceInfo extensionNamespaceInfo = new ExtensionNamespaceInfo(
@@ -35,36 +35,43 @@ public class GeometryDrawingExtensionPackage implements JqtiExtensionPackage<Geo
                 GeometryDrawingConstants.GEOMETRYDRAWING_INTERACTION_CLASS
         )));
     }
-    
-    public void lifecycleEvent(Object source, JqtiLifecycleEventType eventType) {
+
+    @Override
+    public void lifecycleEvent(final Object source, final JqtiLifecycleEventType eventType) {
         return;
     }
-    
+
+    @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
     }
-    
+
+    @Override
     public Map<String, ExtensionNamespaceInfo> getNamespaceInfoMap() {
         return namespaceInfoMap;
     }
-    
-    public boolean implementsCustomOperator(String operatorClassName) {
+
+    @Override
+    public boolean implementsCustomOperator(final String operatorClassName) {
         return customOperatorClasses.contains(operatorClassName);
     }
-    
-    public boolean implementsCustomInteraction(String interactionClassName) {
+
+    @Override
+    public boolean implementsCustomInteraction(final String interactionClassName) {
     	return customInteractionClasses.contains(interactionClassName);
     }
 
-    public CustomOperator<GeometryDrawingExtensionPackage> createCustomOperator(ExpressionParent expressionParent, String operatorClassName) {
+    @Override
+    public CustomOperator<GeometryDrawingExtensionPackage> createCustomOperator(final ExpressionParent expressionParent, final String operatorClassName) {
         return null;
     }
-    
-    public CustomInteraction<GeometryDrawingExtensionPackage> createCustomInteraction(QtiNode parentObject, String interactionClassName) {
+
+    @Override
+    public CustomInteraction<GeometryDrawingExtensionPackage> createCustomInteraction(final QtiNode parentObject, final String interactionClassName) {
     	if (GeometryDrawingConstants.GEOMETRYDRAWING_INTERACTION_CLASS.equals(interactionClassName)) {
             return new GeometryDrawingInteraction(parentObject);
         }
         return null;
-    }   
+    }
 }
 

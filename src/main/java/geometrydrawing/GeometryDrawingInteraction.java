@@ -12,22 +12,24 @@ import uk.ac.ed.ph.jqtiplus.node.item.interaction.CustomInteraction;
 import uk.ac.ed.ph.jqtiplus.node.item.response.declaration.ResponseDeclaration;
 import uk.ac.ed.ph.jqtiplus.running.InteractionBindingContext;
 import uk.ac.ed.ph.jqtiplus.types.ResponseData;
+import uk.ac.ed.ph.jqtiplus.types.StringResponseData;
 import uk.ac.ed.ph.jqtiplus.validation.ValidationContext;
-import uk.ac.ed.ph.jqtiplus.value.NullValue;
 import uk.ac.ed.ph.jqtiplus.value.Signature;
 import uk.ac.ed.ph.jqtiplus.value.Value;
+
+import java.util.List;
 
 public final class GeometryDrawingInteraction extends CustomInteraction<GeometryDrawingExtensionPackage> {
 
     //private static final long serialVersionUID = 6364289440013765516L;
 	private static final long serialVersionUID = 364289440013765516L;
-	
+
 	/** Name of this class in xml schema. */
     public static final String QTI_CLASS_NAME = "geometryDrawingInteraction";
 
     public GeometryDrawingInteraction(final QtiNode parent) {
         super(parent);
-        
+
         getAttributes().add(new IntegerAttribute(this, GeometryDrawingConstants.ATTR_WIDTH_NAME, GeometryDrawingConstants.GEOMETRYDRAWING_NAMESPACE_URI, false));
         getAttributes().add(new IntegerAttribute(this, GeometryDrawingConstants.ATTR_HEIGHT_NAME, GeometryDrawingConstants.GEOMETRYDRAWING_NAMESPACE_URI, false));
         getAttributes().add(new StringAttribute(this, GeometryDrawingConstants.ATTR_BOUNDS_NAME, GeometryDrawingConstants.GEOMETRYDRAWING_NAMESPACE_URI, false));
@@ -38,7 +40,7 @@ public final class GeometryDrawingInteraction extends CustomInteraction<Geometry
     }
 
     public Object getObject() {
-    	Object object = getNodeGroups().getObjectGroup().getObject();
+    	final Object object = getNodeGroups().getObjectGroup().getObject();
     	if (object == null) {
     		return null;
     	} else {
@@ -62,12 +64,14 @@ public final class GeometryDrawingInteraction extends CustomInteraction<Geometry
             context.fireValidationError(this, "Object child must have an image type");
         }
     }
-    
+
     @Override
     protected Value parseResponse(final GeometryDrawingExtensionPackage geometryDrawingExtensionPackage, final ResponseDeclaration responseDeclaration, final ResponseData responseData)
             throws ResponseBindingException {
         Value responseValue;
-        responseValue = NullValue.INSTANCE;
+        // parse responseValue into a stringResponseValue for easier consumption by parseSingleValueLax
+        final List<String> stringResponseData = ((StringResponseData) responseData).getResponseData();
+        responseValue = responseDeclaration.getBaseType().parseSingleValueLax(stringResponseData.get(0));
         return responseValue;
     }
 
